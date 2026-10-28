@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f8f8f4">
-  <meta name="description" content="Kannaðu líkamann á gagnvirkan hátt. Veldu líffærakerfi og smelltu á líffæri til að læra meira.">
-  <title>Líffræði — Kannaðu líkamann</title>
+  <meta name="description" content="Gagnvirk flettibók um líkamann. Byrjaðu á húðinni og flettu inn í sjö spennandi kerfi.">
+  <title>Líffræði — Líkaminn, blað fyrir blað</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
-  <script src="data.js" defer></script><script src="app.js" defer></script>
+  <script src="data.js" defer></script><script src="book-data.js" defer></script><script src="app.js" defer></script>
 </head>
 <body>
   <a class="skip" href="#explorer">Fara í líkamsmynd</a>
@@ -18,25 +18,34 @@
   </header>
   <main>
     <section class="intro">
-      <div><p class="eyebrow"><span></span> UPPGÖTVAÐU • SKOÐAÐU • LÆRÐU</p><h1>Förum undir <em>yfirborðið.</em></h1><p class="intro-text">Líkaminn þinn er fullur af undrum. Veldu kerfi og byrjaðu að kanna.</p></div>
-      <div class="intro-note"><span class="note-spark" aria-hidden="true">✳</span><span>Mörg kerfi.<br><strong>Einn magnað­ur líkami.</strong></span></div>
+      <div><p class="eyebrow"><span></span> GAGNVIRK FLETTIBÓK</p><h1>Líkaminn, <em>blað fyrir blað.</em></h1><p class="intro-text">Byrjaðu á húðinni. Flettu inn í líkamann. Uppgötvaðu hvernig allt tengist.</p></div>
+      <div class="intro-note"><span class="note-spark" aria-hidden="true">✳</span><span>Sjö blöð.<br><strong>Einn magnaður líkami.</strong></span></div>
     </section>
-    <div class="workspace">
-      <aside class="systems-panel" aria-label="Veldu líffærakerfi"><div class="section-label">LÍFFÆRAKERFI <span>06</span></div><nav id="systems"></nav><div class="sidebar-note"><span aria-hidden="true">↖</span><p>Allt tengist!<br><strong>Kerfin vinna saman.</strong></p></div></aside>
-      <section class="explorer" id="explorer" aria-label="Gagnvirk líkamsmynd">
-        <div class="canvas-top"><div><p class="eyebrow" id="system-number"></p><h2 id="system-title"></h2></div><button class="label-toggle" id="labels-button" aria-pressed="true">Heiti <span class="switch" aria-hidden="true"></span></button></div>
-        <p id="system-description" class="system-description"></p>
-        <div class="anatomy-stage" id="anatomy-stage"></div>
-        <div class="canvas-caption"><span class="hint-dot"></span> Smelltu á líkamann til að læra meira</div>
-        <div class="pager"><button id="previous" class="arrow-button" aria-label="Fyrra líffærakerfi">←</button><div id="page-dots" class="page-dots" aria-label="Fletta milli kerfa"></div><button id="next" class="arrow-button" aria-label="Næsta líffærakerfi">→</button></div>
-      </section>
-      <aside class="details-panel" aria-label="Upplýsingar um valinn líkamshluta">
-        <div class="detail-head"><span class="section-label">NÁNARI SKOÐUN</span><button id="text-size" class="text-size" aria-label="Stækka texta" aria-pressed="false">Aa<span>+</span></button></div>
-        <div id="organ-detail" aria-live="polite"></div>
-        <div class="parts-section"><p class="section-label">SKOÐAÐU LÍKA</p><div id="parts-list"></div></div>
-      </aside>
-    </div>
-    <footer><span>Eitt líffæri í einu. Heil veröld að uppgötva.</span><span>Gagnvirkt nám á íslensku <span class="footer-flower" aria-hidden="true">✳</span></span></footer>
+    <nav id="systems" class="chapter-nav" aria-label="Blöð flettibókarinnar"></nav>
+    <section class="book-shell" id="explorer" aria-label="Flettibók um líkamann">
+      <div class="book" id="book">
+        <section class="book-page illustration-page" aria-label="Líkamsmynd">
+          <div class="page-top"><span id="system-number" class="section-label"></span><button class="label-toggle" id="labels-button" aria-pressed="true">Heiti <span class="switch" aria-hidden="true"></span></button></div>
+          <div class="plate-heading"><p id="chapter-caption" class="eyebrow"></p><h2 id="system-title"></h2></div>
+          <div class="anatomy-stage" id="anatomy-stage"></div>
+          <p class="canvas-caption"><span class="hint-dot"></span> Snertu punktana og sjáðu hvað leynist þar</p>
+          <span class="page-number" id="left-page-number"></span>
+        </section>
+        <section class="book-page reading-page" aria-label="Skýringar og uppgötvanir">
+          <div class="detail-head"><span class="section-label">SMELLTU OG KANNAÐU</span><button id="text-size" class="text-size" aria-label="Stækka texta" aria-pressed="false">Aa<span>+</span></button></div>
+          <p id="system-description" class="system-description"></p>
+          <div id="parts-list" class="parts-list" aria-label="Hlutar á þessu blaði"></div>
+          <div id="organ-detail" aria-live="polite"></div>
+          <div class="discovery"><span class="discovery-star" aria-hidden="true">✳</span><div><p class="section-label">PRÓFAÐU SJÁLF/UR</p><p id="discovery-question"></p></div></div>
+          <span class="page-number" id="right-page-number"></span>
+        </section>
+        <div class="turn-sheet" id="turn-sheet" aria-hidden="true"><span>✳</span></div>
+      </div>
+    </section>
+    <div class="book-controls"><button id="previous" class="page-button"><span aria-hidden="true">←</span> Fyrra blað</button><div class="book-progress"><span id="page-progress" role="status"></span><div id="page-dots" class="page-dots" aria-label="Fletta milli blaða"></div></div><button id="next" class="page-button primary">Fletta innar <span aria-hidden="true">→</span></button></div>
+    <p class="next-discovery" id="next-discovery"></p>
+    <p class="book-note">Kerfin fléttast saman í líkamanum. Hvert blað sýnir eitt kerfi svo auðveldara sé að skoða það.</p>
+    <footer><span>Eitt líffæri í einu. Heil veröld að uppgötva.</span><span><a href="assets/">Myndasafn og niðurhal ↗</a> · Gagnvirkt nám á íslensku <span class="footer-flower" aria-hidden="true">✳</span></span></footer>
   </main>
-  <dialog id="about-dialog"><button class="dialog-close" id="close-about" aria-label="Loka">×</button><p class="eyebrow">LÍFFRÆÐI</p><h2>Líkaminn, skref fyrir skref.</h2><p>Veldu kerfi vinstra megin eða flettu með örvunum undir myndinni. Smelltu á líkamshluta eða veldu hann af listanum. Með lyklaborði geturðu notað Tab og Enter.</p><p>Myndirnar eru einfaldaðar skýringarmyndir af líkamanum að framan. Þær sýna helstu hluta hvers kerfis, ekki öll líffæri eða nákvæm stærðarhlutföll.</p><p><strong>Upplestur:</strong> Hljóðhnappurinn notar raddir tækisins. Íslensk rödd þarf að vera uppsett til að framburður verði réttur. Forritið safnar engum persónuupplýsingum.</p><h3>Heimildir fyrir námsefninu</h3><ul><li><a href="https://www.cdc.gov/heart-defects/how-the-heart-works/index.html" target="_blank" rel="noopener noreferrer">CDC · Hjartað og blóðrásin ↗</a></li><li><a href="https://www.nhlbi.nih.gov/health/lungs/respiratory-system" target="_blank" rel="noopener noreferrer">NHLBI · Öndunarkerfið ↗</a></li><li><a href="https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works" target="_blank" rel="noopener noreferrer">NIDDK · Meltingarkerfið ↗</a></li><li><a href="https://www.ninds.nih.gov/health-information/public-education/brain-basics" target="_blank" rel="noopener noreferrer">NINDS · Heilinn og taugakerfið ↗</a></li><li><a href="https://www.niams.nih.gov/health-topics/what-bone" target="_blank" rel="noopener noreferrer">NIAMS · Bein og hreyfing ↗</a></li></ul><p class="small">Fyrsta útgáfa · Efni má aðlaga aldri og námsþörfum nemenda.</p></dialog>
+  <dialog id="about-dialog"><button class="dialog-close" id="close-about" aria-label="Loka">×</button><p class="eyebrow">LÍFFRÆÐI</p><h2>Líkaminn, skref fyrir skref.</h2><p>Byrjaðu á húðinni og flettu síðan innar með hnöppunum undir bókinni, örvatökkunum eða með því að strjúka yfir myndina. Þú getur líka valið blað efst. Smelltu á punkt á líkamsmyndinni eða veldu heiti af listanum. Tab og Enter virka líka.</p><p>Líkamsmyndirnar eru myndskreytingar búnar til með myndgerð og sýna líkamann að framan. Staðsetningar eru til leiðsagnar; myndirnar sýna ekki öll líffæri eða nákvæm stærðarhlutföll. Röð blaðanna er könnunarleið. Kerfin liggja ekki í aðskildum lögum í sömu röð í raunverulegum líkama.</p><p><strong>Upplestur:</strong> Hljóðhnappurinn notar raddir tækisins. Íslensk rödd þarf að vera uppsett til að framburður verði réttur. Forritið safnar engum persónuupplýsingum.</p><h3>Heimildir fyrir námsefninu</h3><ul><li><a href="https://health.nih.gov/health-topics-a-z/healthy-skin" target="_blank" rel="noopener noreferrer">NIH · Húðin ↗</a></li><li><a href="https://www.hopkinsmedicine.org/health/skin/anatomy-of-the-skin" target="_blank" rel="noopener noreferrer">Johns Hopkins · Húð og hár ↗</a></li><li><a href="https://www.cdc.gov/heart-defects/how-the-heart-works/index.html" target="_blank" rel="noopener noreferrer">CDC · Hjartað og blóðrásin ↗</a></li><li><a href="https://www.nhlbi.nih.gov/health/lungs/respiratory-system" target="_blank" rel="noopener noreferrer">NHLBI · Öndunarkerfið ↗</a></li><li><a href="https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works" target="_blank" rel="noopener noreferrer">NIDDK · Meltingarkerfið ↗</a></li><li><a href="https://www.ninds.nih.gov/health-information/public-education/brain-basics" target="_blank" rel="noopener noreferrer">NINDS · Heilinn og taugakerfið ↗</a></li><li><a href="https://www.niams.nih.gov/health-topics/what-bone" target="_blank" rel="noopener noreferrer">NIAMS · Bein og hreyfing ↗</a></li></ul><p class="small">Flettibókarútgáfa · Efni má aðlaga aldri og námsþörfum nemenda.</p></dialog>
 </body></html>

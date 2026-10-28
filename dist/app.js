@@ -1,5 +1,5 @@
 let systemIndex = 0;
-let selectedId = SYSTEMS[0].parts[0].id;
+let selectedId = BOOK[0].parts[0].id;
 let showLabels = true;
 let speaking = false;
 const $ = id => document.getElementById(id);
@@ -11,46 +11,66 @@ function stopSpeech() {
   const button = $('speak-button');
   if (button) { button.setAttribute('aria-pressed', 'false'); button.setAttribute('aria-label', 'Lesa texta upp'); }
 }
-function chooseSystem(index) {
+let turnTimer;
+let lastTouch = null;
+function chooseSystem(index, animate = true) {
+  if (index < 0 || index >= BOOK.length || index === systemIndex) return;
   stopSpeech();
-  systemIndex = (index + SYSTEMS.length) % SYSTEMS.length;
-  selectedId = SYSTEMS[systemIndex].parts[0].id;
+  const old = BOOK[systemIndex];
+  const direction = index > systemIndex ? 'turn-next' : 'turn-previous';
+  systemIndex = index;
+  selectedId = BOOK[systemIndex].parts[0].id;
   render();
+  if (window.matchMedia("(max-width:620px)").matches) $("explorer").scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",block:"start"});
+  clearTimeout(turnTimer);
+  $('book').classList.remove('turn-next', 'turn-previous');
+  if (animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    $('turn-sheet').innerHTML = `<img src="assets/${old.asset}" alt=""><span>✳</span>`;
+    void $('book').offsetWidth;
+    $('book').classList.add(direction);
+    turnTimer = setTimeout(() => $('book').classList.remove(direction), 650);
+  }
 }
 function choosePart(id) {
-  if (!SYSTEMS[systemIndex].parts.some(part => part.id === id)) return;
+  if (!BOOK[systemIndex].parts.some(part => part.id === id)) return;
   stopSpeech(); selectedId = id;
-  renderAnatomySelection(); renderDetails();
-}
-function render() {
-  const system = SYSTEMS[systemIndex];
-  $('systems').innerHTML = SYSTEMS.map((s, i) => `<button class="system-button" data-system="${i}" aria-current="${i === systemIndex}"><span class="system-icon">${icon(s.icon)}</span><span><strong>${s.short}</strong><small>${s.subtitle}</small></span><span class="nav-arrow" aria-hidden="true">↗</span></button>`).join('');
-  $('system-number').textContent = `KERFI ${String(systemIndex + 1).padStart(2, '0')} / 06`;
-  $('system-title').textContent = system.title;
-  $('system-description').textContent = system.description;
-  $('page-dots').innerHTML = SYSTEMS.map((s, i) => `<button data-system="${i}" aria-current="${i === systemIndex}" aria-label="${s.title}"></button>`).join('');
-  const drawing = system.parts.map(p => `<g class="anatomy-part ${p.id === selectedId ? 'selected' : ''}" role="button" tabindex="0" data-part="${p.id}" aria-label="${p.name}" aria-pressed="${p.id === selectedId}"><title>${p.name} — smelltu til að læra meira</title><g class="hit-area" aria-hidden="true">${p.art}</g><g class="art">${p.art}</g></g>`).join('');
-  const labels = system.parts.map(p => {
-    const width = Math.min(138, Math.max(90, p.name.length * 7.7 + 18));
-    const x = Math.min(p.label[0], 394 - width), y = p.label[1];
-    const endX = x < 100 ? x + width : x;
-    return `<g class="diagram-label ${p.id === selectedId ? 'selected' : ''}" data-part="${p.id}" aria-hidden="true"><line x1="${p.point[0]}" y1="${p.point[1]}" x2="${endX}" y2="${y + 13}"/><circle cx="${p.point[0]}" cy="${p.point[1]}" r="4"/><rect x="${x}" y="${y - 4}" width="${width}" height="34" rx="10"/><text x="${x + width/2}" y="${y + 18}" text-anchor="middle">${p.name}</text></g>`;
-  }).join('');
-  $('anatomy-stage').innerHTML = `<svg class="anatomy-svg ${showLabels ? '' : 'hidden-labels'}" viewBox="0 0 400 700" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="${system.title}, einfölduð skýringarmynd að framan">${BODY}${system.background || ''}${drawing}${labels}</svg>`;
+  document.querySelectorAll('#anatomy-stage [data-part]').forEach(element => {
+    element.classList.toggle('selected', element.dataset.part === id);
+    element.setAttribute('aria-pressed', element.dataset.part === id);
+  });
   renderDetails();
 }
-function renderAnatomySelection() {
-  document.querySelectorAll('.anatomy-stage [data-part]').forEach(element => {
-    const selected = element.dataset.part === selectedId;
-    element.classList.toggle('selected', selected);
-    if (element.classList.contains('anatomy-part')) element.setAttribute('aria-pressed', selected);
-  });
+function render() {
+  const system = BOOK[systemIndex];
+  document.documentElement.style.setProperty('--chapter-color', system.color);
+  $('systems').innerHTML = BOOK.map((s, i) => `<button class="chapter-tab" data-system="${i}" aria-current="${i === systemIndex ? 'page' : 'false'}"><span class="chapter-index">${String(i+1).padStart(2,'0')}</span><span class="system-icon">${icon(s.icon)}</span><strong>${s.short}</strong></button>`).join('');
+  $('system-number').textContent = `BLAÐ ${String(systemIndex + 1).padStart(2, '0')} / 07`;
+  $('chapter-caption').textContent = system.chapter;
+  $('system-title').textContent = system.title;
+  $('system-description').textContent = system.description;
+  $('discovery-question').textContent = system.question;
+  $('next-discovery').textContent = system.next;
+  $('page-progress').textContent = `${systemIndex + 1} af ${BOOK.length} blöðum`;
+  $('left-page-number').textContent = String(systemIndex * 2 + 1).padStart(2, '0');
+  $('right-page-number').textContent = String(systemIndex * 2 + 2).padStart(2, '0');
+  $('previous').disabled = systemIndex === 0;
+  $('next').disabled = systemIndex === BOOK.length - 1;
+  $('page-dots').innerHTML = BOOK.map((s, i) => `<button data-system="${i}" aria-current="${i === systemIndex ? 'page' : 'false'}" aria-label="${s.title}"></button>`).join('');
+  const hotspots = system.parts.map(p => {
+    const [x,y,side] = HOTSPOTS[p.id];
+    return `<button class="hotspot ${p.id === selectedId ? 'selected' : ''} ${side < 0 ? 'label-left' : 'label-right'}" data-part="${p.id}" style="left:${x}%;top:${y}%" aria-label="${p.name}" aria-pressed="${p.id === selectedId}"><span class="hotspot-dot" aria-hidden="true"></span><span class="hotspot-label" aria-hidden="true">${p.name}</span></button>`;
+  }).join('');
+  $('anatomy-stage').innerHTML = `<div class="figure-frame ${showLabels ? '' : 'hidden-labels'}"><img class="body-illustration" src="assets/${system.asset}" width="1024" height="1536" alt="${system.title}, myndskreyting af líkamanum að framan" fetchpriority="high">${hotspots}</div>`;
+  const image = $('anatomy-stage').querySelector('img');
+  image.addEventListener('error', () => { image.hidden = true; const warning = document.createElement('p'); warning.className = 'image-error'; warning.textContent = 'Myndin náðist ekki. Þú getur samt skoðað alla hlutana með heitunum á hægri síðunni.'; $('anatomy-stage').append(warning); });
+  renderDetails();
+  // Warm the next illustration without loading the whole book at startup.
+  if (BOOK[systemIndex+1]) { const nextImage = new Image(); nextImage.src = `assets/${BOOK[systemIndex+1].asset}`; }
 }
 function renderDetails() {
-  const system = SYSTEMS[systemIndex];
+  const system = BOOK[systemIndex];
   const part = system.parts.find(p => p.id === selectedId);
-  const number = system.parts.indexOf(part) + 1;
-  $('organ-detail').innerHTML = `<article class="detail-card"><div class="organ-art"><span class="art-number">${String(number).padStart(2, '0')} / ${String(system.parts.length).padStart(2, '0')}</span><svg viewBox="${part.box.join(' ')}" aria-hidden="true"><g class="art">${part.art}</g></svg></div><div class="detail-content"><p class="organ-tag">${part.tag}</p><div class="organ-title-row"><h3>${part.name}</h3><button class="speak" id="speak-button" aria-label="Lesa texta upp" aria-pressed="false">${speakerIcon}</button></div><p class="organ-description">${part.description}</p><h4>Helstu hlutverk</h4><ul class="functions">${part.functions.map(f => `<li>${f}</li>`).join('')}</ul><div class="did-you-know"><strong><span aria-hidden="true">✧</span> Vissir þú?</strong><p>${part.fact}</p></div><p id="speech-status" class="speech-status" role="status" hidden></p></div></article>`;
+  $('organ-detail').innerHTML = `<article class="detail-card"><div class="detail-content"><p class="organ-tag">${part.tag}</p><div class="organ-title-row"><h3>${part.name}</h3><button class="speak" id="speak-button" aria-label="Lesa texta upp" aria-pressed="false">${speakerIcon}</button></div><p class="organ-description">${part.description}</p><h4>Helstu hlutverk</h4><ul class="functions">${part.functions.map(f => `<li>${f}</li>`).join('')}</ul><div class="did-you-know"><strong><span aria-hidden="true">✧</span> Vissir þú?</strong><p>${part.fact}</p></div><p id="speech-status" class="speech-status" role="status" hidden></p></div></article>`;
   $('parts-list').innerHTML = system.parts.map(p => `<button class="part-chip" data-part="${p.id}" aria-pressed="${p.id === selectedId}">${p.name}</button>`).join('');
   $('speak-button').addEventListener('click', () => speakPart(part));
 }
@@ -74,19 +94,25 @@ document.addEventListener('click', event => {
   const systemButton = event.target.closest('[data-system]');
   if (systemButton) { const focusIndex = Number(systemButton.dataset.system); const fromDots = !!systemButton.closest('.page-dots'); chooseSystem(focusIndex); document.querySelector(`${fromDots ? '.page-dots' : '#systems'} [data-system="${focusIndex}"]`)?.focus({preventScroll:true}); return; }
   const partButton = event.target.closest('[data-part]');
-  if (partButton) { const fromList = !!partButton.closest('#parts-list'); const id = partButton.dataset.part; choosePart(id); if (fromList) $('parts-list').querySelector(`[data-part="${id}"]`)?.focus({preventScroll:true}); }
+  if (partButton) { const fromImage = !!partButton.closest('#anatomy-stage'); const fromList = !!partButton.closest('#parts-list'); const id = partButton.dataset.part; choosePart(id); if (fromImage && window.matchMedia('(max-width:620px)').matches) $('organ-detail').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',block:'start'}); if (fromList) $('parts-list').querySelector(`[data-part="${id}"]`)?.focus({preventScroll:true}); }
 });
 $('anatomy-stage').addEventListener('keydown', event => {
-  const part = event.target.closest('.anatomy-part');
+  const part = event.target.closest('.hotspot');
   if (part && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); choosePart(part.dataset.part); }
 });
 $('previous').addEventListener('click', () => chooseSystem(systemIndex - 1));
 $('next').addEventListener('click', () => chooseSystem(systemIndex + 1));
-$('labels-button').addEventListener('click', () => { showLabels = !showLabels; $('labels-button').setAttribute('aria-pressed', showLabels); document.querySelector('.anatomy-svg').classList.toggle('hidden-labels', !showLabels); });
+$('labels-button').addEventListener('click', () => { showLabels = !showLabels; $('labels-button').setAttribute('aria-pressed', showLabels); document.querySelector('.figure-frame').classList.toggle('hidden-labels', !showLabels); });
 $('text-size').addEventListener('click', () => { const large = document.body.classList.toggle('large-text'); $('text-size').setAttribute('aria-pressed', large); $('text-size').setAttribute('aria-label', large ? 'Minnka texta' : 'Stækka texta'); });
 $('about-button').addEventListener('click', () => $('about-dialog').showModal());
 $('close-about').addEventListener('click', () => $('about-dialog').close());
 $('about-dialog').addEventListener('click', event => { if (event.target === $('about-dialog')) { const bounds = event.target.getBoundingClientRect(); if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) event.target.close(); } });
+document.addEventListener('keydown', event => {
+  if ($('about-dialog').open || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
+  if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); chooseSystem(systemIndex + (event.key === 'ArrowRight' ? 1 : -1)); }
+});
+$('anatomy-stage').addEventListener('touchstart', event => { const touch = event.changedTouches[0]; lastTouch = {x:touch.clientX, y:touch.clientY}; }, {passive:true});
+$('anatomy-stage').addEventListener('touchend', event => { if (!lastTouch) return; const touch = event.changedTouches[0], dx = touch.clientX-lastTouch.x, dy = touch.clientY-lastTouch.y; lastTouch = null; if (Math.abs(dx)>65 && Math.abs(dx)>Math.abs(dy)*1.5) chooseSystem(systemIndex + (dx<0 ? 1 : -1)); }, {passive:true});
 window.addEventListener('pagehide', stopSpeech);
 if ('speechSynthesis' in window) window.speechSynthesis.getVoices();
 render();

@@ -1,0 +1,78 @@
+{
+  "title": "Líffræði — myndasafn",
+  "created": "2026-10-28",
+  "generator": "Built-in ImageGen",
+  "prompt_set": "prompt-set.md",
+  "assets": [
+    {
+      "order": 1,
+      "name": "Húðin",
+      "original": "01-skin.png",
+      "web": "01-skin.webp",
+      "width": 1024,
+      "height": 1536,
+      "view": "front",
+      "alpha": true
+    },
+    {
+      "order": 2,
+      "name": "Vöðvakerfið",
+      "original": "02-muscles.png",
+      "web": "02-muscles.webp",
+      "width": 1024,
+      "height": 1536,
+      "view": "front",
+      "alpha": true
+    },
+    {
+      "order": 3,
+      "name": "Beinakerfið",
+      "original": "03-skeleton.png",
+      "web": "03-skeleton.webp",
+      "width": 1024,
+      "height": 1536,
+      "view": "front",
+      "alpha": true
+    },
+    {
+      "order": 4,
+      "name": "Öndunarkerfið",
+      "original": "04-lungs.png",
+      "web": "04-lungs.webp",
+      "width": 1024,
+      "height": 1536,
+      "view": "front",
+      "alpha": true
+    },
+    {
+      "order": 5,
+      "name": "Blóðrásarkerfið",
+      "original": "05-circulation.png",
+      "web": "05-circulation.webp",
+      "width": 1024,
+      "height": 1536,
+      "view": "front",
+      "alpha": true
+    },
+    {
+      "order": 6,
+      "name": "Meltingarkerfið",
+      "original": "06-digestion.png",
+      "web": "06-digestion.webp",
+      "width": 1024,
+      "height": 1536,
+      "view": "front",
+      "alpha": true
+    },
+    {
+      "order": 7,
+      "name": "Taugakerfið",
+      "original": "07-nerves.png",
+      "web": "07-nerves.webp",
+      "width": 1024,
+      "height": 1536,
+      "view": "front",
+      "alpha": true
+    }
+  ]
+}

@@ -43,7 +43,8 @@ function choosePart(id) {
 function render() {
   const system = BOOK[systemIndex];
   document.documentElement.style.setProperty('--chapter-color', system.color);
-  $('systems').innerHTML = BOOK.map((s, i) => `<button class="chapter-tab" data-system="${i}" aria-current="${i === systemIndex ? 'page' : 'false'}"><span class="chapter-index">${String(i+1).padStart(2,'0')}</span><span class="system-icon">${icon(s.icon)}</span><strong>${s.short}</strong></button>`).join('');
+  const shortLabels = ['Húðin','Vöðvar','Bein','Öndun','Blóðrás','Melting','Taugar'];
+  $('systems').innerHTML = BOOK.map((s, i) => `<button class="chapter-tab" data-system="${i}" aria-label="${s.title}" aria-current="${i === systemIndex ? 'page' : 'false'}" style="--tab-color:${s.color};--tab-tint:${s.color}26"><span class="system-icon">${icon(s.icon)}</span><strong><span class="tab-full-label">${s.title}</span><span class="tab-short-label">${shortLabels[i]}</span></strong><span class="current-marker" aria-hidden="true">←</span></button>`).join('');
   $('system-number').textContent = `BLAÐ ${String(systemIndex + 1).padStart(2, '0')} / 07`;
   $('chapter-caption').textContent = system.chapter;
   $('system-title').textContent = system.title;

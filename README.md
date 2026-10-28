@@ -16,7 +16,8 @@ Opnaðu síðan `http://localhost:8000`.
 
 - Sjö samræmdar myndskreytingar af líkamanum, með húðina fremst.
 - Bókaropna með pappírsáferð og hreyfingu við flettingu; virðir reduced-motion stillingu.
-- Fletting með hnöppum, örvatökkum og láréttri stroku á líkamsmynd.
+- Merktir flipar niður með hægri jaðri bókarinnar hoppa beint á hvaða kerfi sem er; dökkur flipi sýnir opna blaðið.
+- Fletting einnig með hnöppum, örvatökkum og láréttri stroku á líkamsmynd.
 - Stuttar uppgötvunarspurningar og æfingar á hverju blaði.
 - Smelltu á hluta myndarinnar, heiti eða hnapp fyrir neðan upplýsingaspjaldið.
 - Flettu milli kerfa og feldu/sýndu heiti.

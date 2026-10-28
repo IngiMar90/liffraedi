@@ -18,6 +18,8 @@ function chooseSystem(index, animate = true) {
   stopSpeech();
   const old = BOOK[systemIndex];
   const direction = index > systemIndex ? 'turn-next' : 'turn-previous';
+  const stacked = window.matchMedia('(max-width:900px)').matches;
+  const frontPage = document.querySelector(stacked || direction === 'turn-previous' ? '.illustration-page' : '.reading-page').cloneNode(true);
   systemIndex = index;
   selectedId = BOOK[systemIndex].parts[0].id;
   render();
@@ -25,7 +27,17 @@ function chooseSystem(index, animate = true) {
   clearTimeout(turnTimer);
   $('book').classList.remove('turn-next', 'turn-previous');
   if (animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    $('turn-sheet').innerHTML = `<img src="assets/${old.asset}" alt=""><span>✳</span>`;
+    const backPage = document.querySelector(stacked || direction === 'turn-next' ? '.illustration-page' : '.reading-page').cloneNode(true);
+    const faces = [frontPage, backPage].map((page, i) => {
+      page.removeAttribute('id');
+      page.querySelectorAll('[id]').forEach(element => element.removeAttribute('id'));
+      const face = document.createElement('div');
+      face.className = `turn-face ${i === 0 ? 'turn-front' : 'turn-back'}`;
+      face.style.setProperty('--chapter-color', i === 0 ? old.color : BOOK[systemIndex].color);
+      face.append(page);
+      return face;
+    });
+    $('turn-sheet').replaceChildren(...faces);
     void $('book').offsetWidth;
     $('book').classList.add(direction);
     turnTimer = setTimeout(() => $('book').classList.remove(direction), 650);

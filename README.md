@@ -19,6 +19,8 @@ Opnaðu síðan `http://localhost:8000`.
 - Merktir flipar niður með hægri jaðri bókarinnar hoppa beint á hvaða kerfi sem er; dökkur flipi sýnir opna blaðið.
 - Fletting einnig með hnöppum, örvatökkum og láréttri stroku á líkamsmynd.
 - Stuttar uppgötvunarspurningar og æfingar á hverju blaði.
+- Kaflaheiti hafa eigið svæði fyrir ofan mynd svo þau hylja ekki líkamann.
+- „Hvað veit ég?“: 14 spurningar í banka, sjö spurninga blönduð umferð eða tvær úr völdum kafla, fjórir svarkostir, vísbendingar, endurtilraun og niðurstaða. Svör eru aðeins í minni vafrasíðunnar og glatast við endurhleðslu.
 - Smelltu á hluta myndarinnar, heiti eða hnapp fyrir neðan upplýsingaspjaldið.
 - Flettu milli kerfa og feldu/sýndu heiti.
 - Stærri upplýsingatexti og lyklaborðsstýring (Tab, Enter, bilslá).
@@ -32,6 +34,7 @@ Opnaðu síðan `http://localhost:8000`.
 - `dist/book-data.js`: röð blaða, myndir, punktar og nýtt efni um húðina.
 - `dist/assets/`: sjö upprunalegar PNG-myndir, léttar WebP-útgáfur, lýsingarskrá og myndgerðarprompt.
 - `dist/app.js`: samskipti, fletting, val á hlutum og upplestur.
+- `dist/quiz.js`: spurningabanki, efnisval, endurgjöf og nafnlaus þekkingaræfing.
 - `dist/style.css`: útlit og skjástærðir.
 - `dist/index.html`: uppbygging og heimildalisti í „Um verkefnið“.
 

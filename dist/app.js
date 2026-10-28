@@ -56,7 +56,7 @@ function render() {
   const system = BOOK[systemIndex];
   document.documentElement.style.setProperty('--chapter-color', system.color);
   const shortLabels = ['Húðin','Vöðvar','Bein','Öndun','Blóðrás','Melting','Taugar'];
-  $('systems').innerHTML = BOOK.map((s, i) => `<button class="chapter-tab" data-system="${i}" aria-label="${s.title}" aria-current="${i === systemIndex ? 'page' : 'false'}" style="--tab-color:${s.color};--tab-tint:${s.color}26"><span class="system-icon">${icon(s.icon)}</span><strong><span class="tab-full-label">${s.title}</span><span class="tab-short-label">${shortLabels[i]}</span></strong><span class="current-marker" aria-hidden="true">←</span></button>`).join('');
+  $('systems').innerHTML = BOOK.map((s, i) => `<button class="chapter-tab" data-system="${i}" aria-label="${s.title}" aria-current="${i === systemIndex ? 'page' : 'false'}" style="--tab-color:${s.color};--tab-tint:${s.color}26"><span class="system-icon">${icon(s.icon)}</span><strong><span class="tab-full-label">${s.title}</span><span class="tab-short-label">${shortLabels[i]}</span></strong><span class="current-marker" aria-hidden="true">←</span></button>`).join('') + '<a class="chapter-tab quiz-tab" href="#knowledge-check" style="--tab-color:#7161a7;--tab-tint:#7161a726"><span class="system-icon" aria-hidden="true">?</span><strong><span class="tab-full-label">Hvað veit ég?</span><span class="tab-short-label">Hvað veit ég?</span></strong></a>';
   $('system-number').textContent = `BLAÐ ${String(systemIndex + 1).padStart(2, '0')} / 07`;
   $('chapter-caption').textContent = system.chapter;
   $('system-title').textContent = system.title;
@@ -121,7 +121,7 @@ $('about-button').addEventListener('click', () => $('about-dialog').showModal())
 $('close-about').addEventListener('click', () => $('about-dialog').close());
 $('about-dialog').addEventListener('click', event => { if (event.target === $('about-dialog')) { const bounds = event.target.getBoundingClientRect(); if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) event.target.close(); } });
 document.addEventListener('keydown', event => {
-  if ($('about-dialog').open || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
+  if ($('about-dialog').open || event.target.closest('#knowledge-check') || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
   if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); chooseSystem(systemIndex + (event.key === 'ArrowRight' ? 1 : -1)); }
 });
 $('anatomy-stage').addEventListener('touchstart', event => { const touch = event.changedTouches[0]; lastTouch = {x:touch.clientX, y:touch.clientY}; }, {passive:true});
